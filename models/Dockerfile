@@ -15,4 +15,4 @@ ENV PYTHONPATH="./${MODEL_NAME}"
 
 # Start the app
 EXPOSE 80
-CMD uvicorn api:app --app-dir ${PYTHONPATH}/src --host 0.0.0.0 --port 80
+CMD uvicorn api:app- --app-dir ${PYTHONPATH}/src --host 0.0.0.0 --port 80
