@@ -5,7 +5,7 @@ from pathlib import Path
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
-from .model import IrisModel
+from src.model import IrisModel
 
 ROOT_DIR = Path(os.path.dirname(os.path.abspath(__file__))).parent
 
@@ -29,7 +29,7 @@ async def predict(request: PredictionRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=80)
 
 
 
