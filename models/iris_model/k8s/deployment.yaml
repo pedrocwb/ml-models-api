@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-model-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-model-api
+  template:
+    metadata:
+      labels:
+        app: iris-model-api
+    spec:
+      containers:
+        - name: iris-model-api
+          imagePullPolicy: Always
+          image: pedrocwb/ml-iris-model:latest
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: iris-model-service
+spec:
+  selector:
+    app: iris-model-api
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 80
+  type: LoadBalancer

@@ -1,2 +1,3 @@
 
-docker build --build-arg MODEL_NAME=iris_model -t iris-model .
+
+docker build . --build-arg MODEL_NAME=iris_model --tag pedrocwb/ml-iris-model
