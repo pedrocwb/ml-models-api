@@ -10,8 +10,9 @@ from src.model import IrisModel
 
 ROOT_DIR = Path(os.path.dirname(os.path.abspath(__file__))).parent
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO,
-                    format='[%(levelname)s] %(message)s')
+logging.basicConfig(
+    stream=sys.stdout, level=logging.INFO, format="[%(levelname)s] %(message)s"
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,3 @@ async def predict(request: PredictionRequest):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=80)
-
-
-

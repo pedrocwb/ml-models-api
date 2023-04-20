@@ -19,4 +19,3 @@ class IrisModel(metaclass=Singleton):
     def predict(self, input_data: List[List[int]]) -> List:
         prediction = self.model.predict(input_data)
         return list(prediction)
-
