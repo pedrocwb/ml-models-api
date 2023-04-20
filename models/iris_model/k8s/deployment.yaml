@@ -20,11 +20,11 @@ spec:
             - containerPort: 80
           resources:
             limits:
-              cpu: 500m
-              memory: 256Mi
-            requests:
-              cpu: 250m
+              cpu: 128m
               memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
 
 ---
 
@@ -40,3 +40,18 @@ spec:
       port: 8080
       targetPort: 80
   type: LoadBalancer
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: iris-model-api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: iris-model-api
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
