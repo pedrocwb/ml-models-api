@@ -1,9 +1,14 @@
-from typing import Any, Dict, List, Union
+import os
+from typing import Any, List
+from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
-from src.model import IrisModel
+from .model import IrisModel
+
+ROOT_DIR = Path(os.path.dirname(os.path.abspath(__file__))).parent
+
 
 app = FastAPI()
 
@@ -18,7 +23,7 @@ class PredictionResponse(BaseModel):
 
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(request: PredictionRequest):
-    model = IrisModel("../assets/iris_knn.joblib")
+    model = IrisModel(f"{ROOT_DIR}/assets/iris_knn.joblib")
     prediction = model.predict(request.input_data)
     return {"prediction": prediction}
 
