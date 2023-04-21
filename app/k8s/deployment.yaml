@@ -1,43 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: iris-model-api
+  name: ml-model-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: iris-model-api
+      app: ml-model-api
   template:
     metadata:
       labels:
-        app: iris-model-api
+        app: ml-model-api
     spec:
       containers:
-        - name: iris-model-api
+        - name: ml-model-api
           imagePullPolicy: Always
-          image: pedrocwb/ml-iris-model:latest
+          image: pedrocwb/ml-model-api:latest
           ports:
             - containerPort: 80
-          resources:
-            limits:
-              cpu: 128m
-              memory: 128Mi
-            requests:
-              cpu: 100m
-              memory: 100Mi
-
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: iris-model-service
+  name: ml-model-service
 spec:
   selector:
-    app: iris-model-api
+    app: ml-model-api
   ports:
     - name: http
-      port: 8001
+      port: 8080
       targetPort: 80
   type: LoadBalancer
 
@@ -46,12 +38,12 @@ spec:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: iris-model-api-hpa
+  name: ml-model-api-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: iris-model-api
+    name: ml-model-api
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
