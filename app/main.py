@@ -29,7 +29,6 @@ def get_model_url(model_name):
     # check if model exists in registry
     if model_name not in model_registry:
         raise HTTPException(status_code=404, detail="Model not found")
-
     if os.getenv("KUBERNETES_SERVICE_HOST"):
         # running on kubernetes
         service_name = model_registry[model_name]["service_name"]
