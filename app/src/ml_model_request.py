@@ -4,9 +4,9 @@ from typing import Any, Dict
 
 import requests
 
-from app.src.config import logger
-from app.src.exceptions import ModelNotFoundException, QueueNotFoundException
-from app.src.rmq_client import RabbitMQRPCClient
+from config import logger
+from exceptions import ModelNotFoundException, QueueNotFoundException
+from rmq_client import RabbitMQRPCClient
 
 
 class MLModelRequest(abc.ABC):

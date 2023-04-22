@@ -32,7 +32,7 @@ spec:
             - name: RMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-cluster-default-password
+                  name: rabbitmq-cluster-default-user
                   key: password
 
 ---

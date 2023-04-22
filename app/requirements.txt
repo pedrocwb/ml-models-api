@@ -2,3 +2,4 @@ fastapi
 uvicorn[standard]
 requests
 requests_mock
+pika
