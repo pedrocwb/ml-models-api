@@ -6,7 +6,7 @@ import requests
 
 from app.config import logger
 from app.exceptions import ModelNotFoundException, QueueNotFoundException
-from app.rqm_client import RabbitMQRPCClient
+from app.rmq_client import RabbitMQRPCClient
 
 
 class MLModelRequest(abc.ABC):
