@@ -15,9 +15,26 @@ spec:
       containers:
         - name: ml-model-api
           imagePullPolicy: Always
-          image: pedrocwb/ml-model-api:latest
+          image: pedrocwb/ml-model-api-rmq:latest
           ports:
             - containerPort: 80
+          env:
+            - name: RMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: host
+            - name: RMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: username
+            - name: RMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-password
+                  key: password
+
 ---
 
 apiVersion: v1

@@ -4,9 +4,9 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from app.config import logger
-from app.exceptions import MLModelRequestNotFoundException
-from app.ml_model_request import RMQModelRequest
+from app.src.config import logger
+from app.src.exceptions import MLModelRequestNotFoundException
+from app.src.ml_model_request import RMQModelRequest
 
 app = FastAPI()
 

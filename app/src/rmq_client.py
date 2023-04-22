@@ -4,7 +4,7 @@ from typing import List
 import pika
 import uuid
 
-from app.config import RMQ_HOST, RMQ_PASSWORD, RMQ_USER
+from app.src.config import RMQ_HOST, RMQ_PASSWORD, RMQ_USER
 
 
 class Singleton(type):
