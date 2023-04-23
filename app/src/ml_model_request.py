@@ -15,15 +15,30 @@ class MLModelRequest(abc.ABC):
         raise NotImplementedError
 
 
+class RabbitMQConnectionPool:
+    def __init__(self):
+        self.connections = {}
+
+    def get_connection(self, model_name: str) -> RabbitMQRPCClient:
+        if model_name not in self.connections:
+            queue = RMQModelRequest.get_queue(model_name)
+            self.connections[model_name] = RabbitMQRPCClient(queue=queue)
+        return self.connections[model_name]
+
+    def close_all(self):
+        for connection in self.connections:
+            connection.close()
+        self.connections.clear()
+
+
 class RMQModelRequest(MLModelRequest):
     MODEL_QUEUES = {
         "iris-model": "iris_rpc_queue",
     }
+    connection_pool = RabbitMQConnectionPool()
 
     def request(self, model_name: str, input_data: Any) -> Dict:
-        queue = self.get_queue(model_name)
-
-        client = RabbitMQRPCClient(queue=queue)
+        client = self.connection_pool.get_connection(model_name)
 
         logger.info(f" [x] Requesting predictions for {input_data}")
         response = client.call(input_data)
@@ -31,6 +46,7 @@ class RMQModelRequest(MLModelRequest):
 
         return response
 
+    @classmethod
     def get_queue(self, model_name: str) -> str:
         if model_name not in self.MODEL_QUEUES:
             raise QueueNotFoundException("Model queue not found")

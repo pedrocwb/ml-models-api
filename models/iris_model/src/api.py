@@ -6,7 +6,7 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
-from src.model import IrisModel
+from model import IrisModel
 
 ROOT_DIR = Path(os.path.dirname(os.path.abspath(__file__))).parent
 

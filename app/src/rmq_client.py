@@ -16,7 +16,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class RabbitMQRPCClient(metaclass=Singleton):
+class RabbitMQRPCClient:
     def __init__(self, queue: str):
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(
@@ -59,3 +59,6 @@ class RabbitMQRPCClient(metaclass=Singleton):
         while self.response is None:
             self.connection.process_data_events()
         return self.response
+
+    def close(self):
+        self.connection.close()

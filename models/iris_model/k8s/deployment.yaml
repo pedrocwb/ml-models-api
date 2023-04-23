@@ -15,9 +15,25 @@ spec:
       containers:
         - name: iris-model-api
           imagePullPolicy: Always
-          image: pedrocwb/ml-iris-model:latest
+          image: pedrocwb/ml-iris-model-rmq:latest
           ports:
             - containerPort: 80
+          env:
+            - name: RMQ_HOSTs
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: host
+            - name: RMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: username
+            - name: RMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: password
           resources:
             limits:
               cpu: 128m
@@ -25,7 +41,6 @@ spec:
             requests:
               cpu: 100m
               memory: 100Mi
-
 ---
 
 apiVersion: v1

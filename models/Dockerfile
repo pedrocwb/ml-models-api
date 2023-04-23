@@ -9,10 +9,9 @@ COPY ${MODEL_NAME}/requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy the model files
-COPY ${MODEL_NAME}  ./${MODEL_NAME}
-ENV PYTHONPATH="./${MODEL_NAME}"
+COPY ${MODEL_NAME}  .
 
 
 # Start the app
 EXPOSE 80
-CMD uvicorn api:app --app-dir ${PYTHONPATH}/src --host 0.0.0.0 --port 80
+CMD python src/model.py

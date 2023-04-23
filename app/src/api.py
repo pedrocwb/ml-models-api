@@ -33,5 +33,9 @@ async def predict(request: PredictionRequest):
     return response
 
 
+@app.on_event("shutdown")
+async def shutdown_event():
+    RMQModelRequest.connection_pool.close_all()
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
