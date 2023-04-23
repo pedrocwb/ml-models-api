@@ -20,12 +20,18 @@ class RabbitMQConnectionPool:
         self.connections = {}
 
     def get_connection(self, model_name: str) -> RabbitMQRPCClient:
-        if model_name not in self.connections:
+        if (
+            model_name not in self.connections
+            or self.connections[model_name].is_closed
+            or self.connections[model_name].channel.is_closed
+        ):
             queue = RMQModelRequest.get_queue(model_name)
             self.connections[model_name] = RabbitMQRPCClient(queue=queue)
+
         return self.connections[model_name]
 
     def close_all(self):
+        logger.info("Closing all connections")
         for connection in self.connections:
             connection.close()
         self.connections.clear()
@@ -34,6 +40,8 @@ class RabbitMQConnectionPool:
 class RMQModelRequest(MLModelRequest):
     MODEL_QUEUES = {
         "iris-model": "iris_rpc_queue",
+        "iris-model-v2": "iris_v2_rpc_queue",
+        "iris-model-v3": "iris_v3_rpc_queue",
     }
     connection_pool = RabbitMQConnectionPool()
 

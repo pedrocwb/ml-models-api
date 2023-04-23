@@ -60,5 +60,9 @@ class RabbitMQRPCClient:
             self.connection.process_data_events()
         return self.response
 
+    @property
+    def is_closed(self):
+        return self.connection.is_closed
+
     def close(self):
         self.connection.close()

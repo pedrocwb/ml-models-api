@@ -1,5 +1,4 @@
 from typing import Any
-
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -7,6 +6,7 @@ from pydantic import BaseModel
 from config import logger
 from exceptions import MLModelRequestNotFoundException
 from ml_model_request import RMQModelRequest
+
 
 app = FastAPI()
 
@@ -28,14 +28,9 @@ async def predict(request: PredictionRequest):
         raise HTTPException(status_code=404, detail=e.args)
 
     response["model_name"] = request.model_name
-
     logger.info(f"Request response: [response: {response}]")
     return response
 
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    RMQModelRequest.connection_pool.close_all()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
