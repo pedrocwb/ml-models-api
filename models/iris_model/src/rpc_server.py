@@ -34,7 +34,7 @@ class RabbitMQRPCServer:
 
     def start(self):
         self.channel.queue_declare(queue=self.queue)
-        self.channel.basic_qos(prefetch_count=1)
+        self.channel.basic_qos(prefetch_count=5)
         self.channel.basic_consume(
             queue=self.queue, on_message_callback=self.on_request
         )

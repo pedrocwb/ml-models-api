@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os
 from pathlib import Path
@@ -44,8 +45,12 @@ class IrisRPCServer(RabbitMQRPCServer):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--queue", help="name of the queue for the model server")
+    args = parser.parse_args()
+
     model_path = f"{ROOT_DIR}/assets/iris_knn.joblib"
-    server = IrisRPCServer(queue="iris_rpc_queue", model_path=model_path)
+    server = IrisRPCServer(queue=args.queue, model_path=model_path)
     try:
         server.start()
     except KeyboardInterrupt:

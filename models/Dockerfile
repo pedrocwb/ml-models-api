@@ -14,4 +14,4 @@ COPY ${MODEL_NAME}  .
 
 # Start the app
 EXPOSE 80
-CMD python src/model.py
+CMD python src/model.py --queue iris_rpc_queue
