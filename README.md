@@ -48,10 +48,10 @@ The call method is used to send input data to the model service and wait for a r
 - Message queue
 
 ## Future Improvements
-- Monitoring and alerting with Prometheus and Grafana
-- Integration of a model registry
-- Implementation of a CI/CD pipeline
-- Improve code sharing between models
+- Monitoring and Alerting: Integration of Prometheus and Grafana for monitoring the system's performance and setting up alerts for potential issues.
+- Model Registry: Incorporation of a model registry to manage and track different versions of machine learning models.
+- CI/CD Pipeline: Implementation of a Continuous Integration and Continuous Deployment (CI/CD) pipeline for smooth development and deployment of updates.
+- Code Sharing: Enhance code sharing between models, making it easier to develop and maintain multiple models in the system.
 
 ## Instructions
 
