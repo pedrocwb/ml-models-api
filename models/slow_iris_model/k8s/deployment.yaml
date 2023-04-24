@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slow-iris-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slow-iris-model
+  template:
+    metadata:
+      labels:
+        app: slow-iris-model
+    spec:
+      containers:
+        - name: slow-iris-model
+          imagePullPolicy: Always
+          image: pedrocwb/slow-iris-model-rmq:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: RMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: host
+            - name: RMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: username
+            - name: RMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-cluster-default-user
+                  key: password
+          resources:
+            limits:
+              cpu: 128m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: slow-iris-model-service
+spec:
+  selector:
+    app: slow-iris-model
+  ports:
+    - name: http
+      port: 8001
+      targetPort: 80
+  type: LoadBalancer
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: slow-iris-model-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: slow-iris-model
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80

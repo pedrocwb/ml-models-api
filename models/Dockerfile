@@ -14,4 +14,4 @@ COPY ${MODEL_NAME}  .
 
 # Start the app
 EXPOSE 80
-CMD python src/model.py --queue fast_iris_model_queue
+CMD python src/model.py --queue ${MODEL_NAME}_queue
