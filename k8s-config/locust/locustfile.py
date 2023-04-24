@@ -8,15 +8,15 @@ class PredictionUser(HttpUser):
     host = "http://localhost:8080"
     wait_time = between(1, 2)
 
-    def input_data(self):
+    @staticmethod
+    def input_data():
         input_data = [
             [
-                random.uniform(0, 10),  # Replace with appropriate input range
-                random.uniform(0, 10),
-                random.uniform(0, 10),
-                random.uniform(0, 10),
+                round(random.uniform(0, 10), 2),
+                round(random.uniform(0, 10), 2),
+                round(random.uniform(0, 10), 2),
+                round(random.uniform(0, 10), 2),
             ]
-            for _ in range(10)  # Generate 10 input samples
         ]
         return input_data
 
