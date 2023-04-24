@@ -5,3 +5,4 @@ joblib
 pytest
 httpx
 black
+pika

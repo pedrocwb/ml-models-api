@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ml-model-api
+  name: fast-iris-model
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ml-model-api
+      app: fast-iris-model
   template:
     metadata:
       labels:
-        app: ml-model-api
+        app: fast-iris-model
     spec:
       containers:
-        - name: ml-model-api
+        - name: fast-iris-model
           imagePullPolicy: Always
-          image: pedrocwb/ml-model-api-rmq:latest
+          image: pedrocwb/fast-iris-model-rmq:latest
           ports:
             - containerPort: 80
           env:
@@ -36,24 +36,23 @@ spec:
                   key: password
           resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 128m
+              memory: 128Mi
             requests:
-              cpu: 250m
-              memory: 256Mi
-
+              cpu: 100m
+              memory: 100Mi
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: ml-model-service
+  name: fast-iris-model-service
 spec:
   selector:
-    app: ml-model-api
+    app: fast-iris-model
   ports:
     - name: http
-      port: 8080
+      port: 8001
       targetPort: 80
   type: LoadBalancer
 
@@ -62,12 +61,12 @@ spec:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: ml-model-api-hpa
+  name: fast-iris-model-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: ml-model-api
+    name: fast-iris-model
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
