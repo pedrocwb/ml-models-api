@@ -29,6 +29,7 @@ class PredictionUser(HttpUser):
 
 class FastModelUser(PredictionUser):
     weight = 3
+
     @task
     def model_predict(self):
         self.make_request("fast-iris-model")
@@ -36,6 +37,7 @@ class FastModelUser(PredictionUser):
 
 class IntermediateUser(PredictionUser):
     weight = 2
+
     @task
     def model_predict(self):
         self.make_request("intermediate-iris-model")
@@ -43,6 +45,7 @@ class IntermediateUser(PredictionUser):
 
 class SlowUser(PredictionUser):
     weight = 1
+
     @task
     def model_predict(self):
         self.make_request("slow-iris-model")

@@ -38,6 +38,14 @@ class RabbitMQConnectionPool:
 
 
 class RMQModelRequest(MLModelRequest):
+
+    """
+    The RMQModelRequest class uses RabbitMQ to connect to a remote machine learning model service.
+    It connects to a specific queue that is associated with a particular model and sends the input
+    data to that queue. It then waits for a response from the model service, which is sent back to
+    the application via the same queue.
+    """
+
     MODEL_QUEUES = {
         "fast-iris-model": "fast_iris_model_queue",
         "intermediate-iris-model": "intermediate_iris_model_queue",
@@ -62,6 +70,13 @@ class RMQModelRequest(MLModelRequest):
 
 
 class HTTPModelRequest(MLModelRequest):
+    """
+    The HTTPModelRequest class uses a REST API to connect to a remote machine learning model service.
+    It connects to a specific URL that is associated with a particular model and sends the input data
+    via a POST request to that URL. It then waits for a response from the model service,
+    which is sent back to the application as a JSON object.
+    """
+
     MODEL_REGISTRY = {
         "iris-model": {
             "service_name": "iris-model-service",
