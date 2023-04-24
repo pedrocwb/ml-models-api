@@ -1,3 +1,7 @@
 
 
-docker build . --build-arg MODEL_NAME=iris_model --tag pedrocwb/ml-iris-model-rmq
+docker build . --build-arg MODEL_NAME=fast_iris_model \
+  --tag pedrocwb/fast-iris-model-rmq \
+  && docker push pedrocwb/fast-iris-model-rmq
+
+

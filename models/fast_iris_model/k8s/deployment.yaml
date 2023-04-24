@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: iris-model-api
+  name: fast-iris-model
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: iris-model-api
+      app: fast-iris-model
   template:
     metadata:
       labels:
-        app: iris-model-api
+        app: fast-iris-model
     spec:
       containers:
-        - name: iris-model-api
+        - name: fast-iris-model
           imagePullPolicy: Always
-          image: pedrocwb/ml-iris-model-rmq:latest
+          image: pedrocwb/fast-iris-model-rmq:latest
           ports:
             - containerPort: 80
           env:
-            - name: RMQ_HOSTs
+            - name: RMQ_HOST
               valueFrom:
                 secretKeyRef:
                   name: rabbitmq-cluster-default-user
@@ -49,7 +49,7 @@ metadata:
   name: iris-model-service
 spec:
   selector:
-    app: iris-model-api
+    app: fast-iris-model
   ports:
     - name: http
       port: 8001
@@ -61,12 +61,12 @@ spec:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: iris-model-api-hpa
+  name: fast-iris-model-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: iris-model-api
+    name: fast-iris-model
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
