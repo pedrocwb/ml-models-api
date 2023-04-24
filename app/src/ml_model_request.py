@@ -39,9 +39,9 @@ class RabbitMQConnectionPool:
 
 class RMQModelRequest(MLModelRequest):
     MODEL_QUEUES = {
-        "iris-model": "iris_rpc_queue",
-        "iris-model-v2": "iris_v2_rpc_queue",
-        "iris-model-v3": "iris_v3_rpc_queue",
+        "fast-iris-model": "fast_iris_model_queue",
+        "intermediate-iris-model": "intermediate_iris_model_queue",
+        "slow-iris-model": "slow_iris_model_queue",
     }
     connection_pool = RabbitMQConnectionPool()
 

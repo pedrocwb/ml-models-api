@@ -10,8 +10,10 @@ RUN pip install -r requirements.txt
 
 # Copy the model files
 COPY ${MODEL_NAME}  .
+ENV QUEUE_NAME=${MODEL_NAME}_queue
+
 
 
 # Start the app
 EXPOSE 80
-CMD python src/model.py --queue ${MODEL_NAME}_queue
+CMD python src/model.py --queue ${QUEUE_NAME}
