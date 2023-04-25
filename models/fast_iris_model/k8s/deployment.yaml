@@ -36,11 +36,11 @@ spec:
                   key: password
           resources:
             limits:
-              cpu: 128m
-              memory: 128Mi
+              cpu: 400m
+              memory: 256Mi
             requests:
               cpu: 100m
-              memory: 100Mi
+              memory: 256Mi
 ---
 
 apiVersion: v1

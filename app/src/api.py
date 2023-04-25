@@ -34,7 +34,7 @@ async def predict(request: PredictionRequest):
         logger.info(f"Cache miss for {cache_key}")
 
         model_request = RMQModelRequest()
-        response = model_request.request(request.model_name, request.input_data)
+        response = await model_request.request(request.model_name, request.input_data)
     except MLModelRequestNotFoundException as e:
         raise HTTPException(status_code=404, detail=e.args)
 
@@ -47,4 +47,4 @@ async def predict(request: PredictionRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run(app, host="0.0.0.0", port=9090)
