@@ -3,4 +3,5 @@ uvicorn[standard]
 requests
 requests_mock
 pika
+aio_pika
 redis

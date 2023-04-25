@@ -1,4 +1,5 @@
 import abc
+import asyncio
 import os
 from typing import Any, Dict
 
@@ -6,7 +7,7 @@ import requests
 
 from config import logger
 from exceptions import ModelNotFoundException, QueueNotFoundException
-from rmq_client import RabbitMQRPCClient
+from rmq_client import RabbitMQRPCClient, AsyncRabbitMQRPCClient
 
 
 class MLModelRequest(abc.ABC):
@@ -19,21 +20,20 @@ class RabbitMQConnectionPool:
     def __init__(self):
         self.connections = {}
 
-    def get_connection(self, model_name: str) -> RabbitMQRPCClient:
+    async def get_connection(self, model_name: str) -> AsyncRabbitMQRPCClient:
         if (
             model_name not in self.connections
             or self.connections[model_name].is_closed
             or self.connections[model_name].channel.is_closed
         ):
             queue = RMQModelRequest.get_queue(model_name)
-            self.connections[model_name] = RabbitMQRPCClient(queue=queue)
-
+            self.connections[model_name] = await AsyncRabbitMQRPCClient.create(queue=queue)
         return self.connections[model_name]
 
-    def close_all(self):
+    async def close_all(self):
         logger.info("Closing all connections")
         for connection in self.connections:
-            connection.close()
+            await connection.close()
         self.connections.clear()
 
 
@@ -53,11 +53,11 @@ class RMQModelRequest(MLModelRequest):
     }
     connection_pool = RabbitMQConnectionPool()
 
-    def request(self, model_name: str, input_data: Any) -> Dict:
-        client = self.connection_pool.get_connection(model_name)
+    async def request(self, model_name: str, input_data: Any) -> Dict:
+        client = await self.connection_pool.get_connection(model_name)
 
         logger.info(f" [x] Requesting predictions for {input_data}")
-        response = client.call(input_data)
+        response = await client.call(input_data)
         logger.info(f" [x] Got response {response}")
 
         return response

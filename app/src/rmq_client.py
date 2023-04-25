@@ -1,6 +1,7 @@
 import json
 from typing import List
-
+import asyncio
+import aio_pika
 import pika
 import uuid
 
@@ -66,3 +67,58 @@ class RabbitMQRPCClient:
 
     def close(self):
         self.connection.close()
+
+
+class AsyncRabbitMQRPCClient:
+    def __init__(self, queue: str):
+        self.queue = queue
+        self.response = None
+        self.corr_id = None
+
+        self.response_received = asyncio.Event()
+
+    @classmethod
+    async def create(cls, queue: str):
+        client = cls(queue)
+        await client.connect()
+        return client
+
+    async def connect(self):
+        self.connection = await aio_pika.connect_robust(
+            f"amqp://{RMQ_USER}:{RMQ_PASSWORD}@{RMQ_HOST}"
+        )
+
+        self.channel = await self.connection.channel()
+        self.callback_queue = await self.channel.declare_queue(exclusive=True)
+
+        await self.callback_queue.consume(self.on_response)
+
+    async def on_response(self, message: aio_pika.IncomingMessage):
+        async with message.process():
+            if self.corr_id == message.correlation_id:
+                self.response = json.loads(message.body)
+                self.response_received.set()
+
+    async def call(self, input_data: List[List[int]]):
+        self.response = None
+        self.corr_id = str(uuid.uuid4())
+
+        await self.channel.default_exchange.publish(
+            aio_pika.Message(
+                body=json.dumps(input_data).encode(),
+                correlation_id=self.corr_id,
+                reply_to=self.callback_queue.name
+            ),
+            routing_key=self.queue
+        )
+
+        await self.response_received.wait()
+        self.response_received.clear()
+        return self.response
+
+    @property
+    def is_closed(self):
+        return self.connection.is_closed
+
+    async def close(self):
+        await self.connection.close()
